@@ -25,7 +25,7 @@ SOFTWARE.
 import torch
 
 
-def box_filter(input: torch.Tensor, kernel_size: int, padding: int):
+def shift_filter(input: torch.Tensor, kernel_size: int, padding: int):
     N, channel, H, W = input.shape
     # im2col
     col = torch.nn.Unfold(kernel_size, padding=padding, stride=1)(input)
@@ -41,8 +41,8 @@ def box_filter(input: torch.Tensor, kernel_size: int, padding: int):
     )
 
     for i in range(channel):
-        filters[
-            i, (kernel_size_sq * i) : (kernel_size_sq * (i + 1))  # noqa: E203
-        ] = (1.0 / kernel_size_sq)
+        center = kernel_size // 2
+
+        filters[i][kernel_size_sq * i + kernel_size * center] = 1
 
     return (filters @ col).reshape(N, channel, H, W)

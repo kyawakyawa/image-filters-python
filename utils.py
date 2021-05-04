@@ -32,6 +32,16 @@ def try_gpu(e):
     return e
 
 
+def to_gray_scale(input: torch.Tensor):
+    gray = (
+        0.114 * input[:, 0, :, :]
+        + 0.587 * input[:, 1, :, :]
+        + 0.299 * input[:, 2, :, :]
+    )
+    gray = gray.unsqueeze(1)
+    return gray
+
+
 def im2col(im: torch.Tensor, kw: int, kh: int, stride=1, pad=0):
     N, C, H, W = im.shape
     out_h = (H + 2 * pad - kh) // stride + 1
