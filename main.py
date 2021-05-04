@@ -44,6 +44,9 @@ from second_order_derivative_operation import (
     y_2nd_derivative_operator,
     laplacian_filter,
 )
+from gaussian_filter import gaussian_filter
+from laplacian_of_gaussian import laplacian_of_gaussian
+from garbor_filter import garbor_filter
 
 from PIL import Image
 
@@ -239,3 +242,45 @@ if __name__ == "__main__":
     )
 
     im_laplacian_filter.save("output-laplacian-filter.jpg")
+
+    # gaussian filter
+    im_gaussian_filter = gaussian_filter(im, 9, 4, 3)
+    im_gaussian_filter = torch.abs(im_gaussian_filter)
+    mx = torch.max(im_gaussian_filter)
+    im_gaussian_filter = im_gaussian_filter / mx
+    im_gaussian_filter = im_gaussian_filter.squeeze()
+    im_gaussian_filter = torchvision.transforms.functional.to_pil_image(
+        im_gaussian_filter
+    )
+
+    im_gaussian_filter.save("output-gaussian-filter.jpg")
+
+    # laplacian of gaussian filter
+    im_laplacian_of_gaussian = to_gray_scale(im)
+    im_laplacian_of_gaussian = laplacian_of_gaussian(
+        im_laplacian_of_gaussian, 9, 4, 1
+    )
+    im_laplacian_of_gaussian = torch.abs(im_laplacian_of_gaussian)
+    mx = torch.max(im_laplacian_of_gaussian)
+    im_laplacian_of_gaussian = im_laplacian_of_gaussian / mx
+    im_laplacian_of_gaussian = im_laplacian_of_gaussian.squeeze()
+    im_laplacian_of_gaussian = torchvision.transforms.functional.to_pil_image(
+        im_laplacian_of_gaussian
+    )
+
+    im_laplacian_of_gaussian.save("output-laplacian-of-gaussian.jpg")
+
+    # garbor filter
+    im_garbor_filter = to_gray_scale(im)
+    im_garbor_filter = garbor_filter(
+        im, 21, 10, math.pi / 4, 2.0, 2.0, 2 * math.pi, 0.0
+    )
+    im_garbor_filter = torch.abs(im_garbor_filter)
+    mx = torch.max(im_garbor_filter)
+    im_garbor_filter = im_garbor_filter / mx
+    im_garbor_filter = im_garbor_filter.squeeze()
+    im_garbor_filter = torchvision.transforms.functional.to_pil_image(
+        im_garbor_filter
+    )
+
+    im_garbor_filter.save("output-garbor-filter.jpg")
